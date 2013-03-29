@@ -1,0 +1,17 @@
+// Fireworks Extension: Commands
+// Selection to SubLayer.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBselectionToSublayer() {
+	var d = fw.getDocumentDOM();
+
+	var layerName = prompt( 'Layer Name', '' );
+	if( !layerName ) layerName = null;
+
+	d.addNewSubLayer( d.currentLayerNum, layerName, false );
+	d.moveSelectionToLayer( d.currentLayerNum, false, 'none', 0 );
+}
+
+LBselectionToSublayer();
