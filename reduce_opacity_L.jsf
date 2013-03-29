@@ -1,0 +1,22 @@
+// Fireworks Extension: Commands
+// Reducing Opacity(-10) of Selection.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBreduceOpacityL() {
+	var s = fw.selection;
+
+	for( var i = s.length - 1; i >= 0; i-- ) {
+		s[ i ].opacity = Math.floor( s[ i ].opacity );
+		if( 0 < s[ i ].opacity - 10 ) {
+			s[ i ].opacity -= 10;
+		} else {
+			s[ i ].opacity = 0;
+		}
+	}
+
+	return true;
+}
+
+LBreduceOpacityL();
