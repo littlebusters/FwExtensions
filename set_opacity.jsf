@@ -1,0 +1,74 @@
+// Fireworks Extension: Commands
+// Set Opacity of Objects. (with Operation Mode)
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBsetOpacity() {
+
+	var s = fw.selection;
+	if( !s.length ) return false;
+
+	var opa = prompt( 'enter opacity', 100 );
+	if( isFinite( opa ) && '+' != String( opa ).substr( 0, 1 ) && '-' != String( opa ).substr( 0, 1 ) ) {
+		if( 0 > opa ) opa = 0;
+		if( 100 < opa ) opa = 100;
+		for( var i = s.length - 1; i >= 0; i-- ) {
+			s[ i ].opacity = opa;
+		}
+	} else {
+		var operator = String( opa ).substr( 0, 1 );
+		var operand  = String( opa ).substr( 1 ) - 0;
+		if( isFinite( operand ) ) {
+			switch( operator ) {
+				case '+':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						s[ i ].opacity = Math.floor( s[ i ].opacity );
+						if( 100 >= s[ i ].opacity + operand ) {
+							s[ i ].opacity += operand;
+						} else {
+							s[ i ].opacity = 100;
+						}
+					}
+					break;
+				case '-':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						s[ i ].opacity = Math.floor( s[ i ].opacity );
+						if( 0 < s[ i ].opacity - operand ) {
+							s[ i ].opacity -= operand;
+						} else {
+							s[ i ].opacity = 0;
+						}
+					}
+					break;
+				case '*':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						s[ i ].opacity = Math.floor( s[ i ].opacity );
+						if( 100 >= s[ i ].opacity * operand ) {
+							s[ i ].opacity *= operand;
+						} else {
+							s[ i ].opacity = 100;
+						}
+					}
+					break;
+				case '/':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						s[ i ].opacity = Math.floor( s[ i ].opacity );
+						if( 1 < s[ i ].opacity / operand ) {
+							s[ i ].opacity /= operand;
+						} else {
+							s[ i ].opacity = 1;
+						}
+					}
+					break;
+			}
+		} else {
+			return false;
+		}
+	}
+
+
+	return true;
+}
+
+LBsetOpacity();
