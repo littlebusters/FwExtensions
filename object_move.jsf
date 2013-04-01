@@ -1,0 +1,23 @@
+// Fireworks Extension: Commands
+// Selected Object Move.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBobjectMove() {
+	var d = fw.getDocumentDOM();
+
+	var coordinate = prompt( 'enter X/Y', '' );
+	coordinate = coordinate.split( '/' );
+	
+	if ( isFinite( coordinate[0] ) && isFinite( coordinate[1] ) ) {
+		var xy = { x: coordinate[0], y: coordinate[1] };
+		d.moveSelectionBy( xy, false, true );
+	} else {
+		return false;
+	}
+
+	return true;
+}
+
+LBobjectMove();
