@@ -8,6 +8,7 @@ function LBobjectMove() {
 	var d = fw.getDocumentDOM();
 
 	var coordinate = prompt( 'enter X/Y', '' );
+	if( !coordinate ) return false;
 	coordinate = coordinate.split( '/' );
 	
 	if ( isFinite( coordinate[0] ) && isFinite( coordinate[1] ) ) {
