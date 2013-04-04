@@ -1,0 +1,133 @@
+// Fireworks Extension: Commands
+// Set Opacity of Fill. (with Operation Mode)
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBsetFillOpacity()
+{
+
+	var s = fw.selection;
+	if( !s.length ) return false;
+
+	var opa = prompt( 'enter opacity', 100 );
+	if( !opa ) return false;
+
+	if( isFinite( opa ) && '+' != String( opa ).substr( 0, 1 ) && '-' != String( opa ).substr( 0, 1 ) ) {
+		if( 0 > opa ) opa = 0;
+		if( 100 < opa ) opa = 100;
+		opa = dth( opa );
+
+		for( var i = s.length - 1; i >= 0; i-- ) {
+			if( '[object Path]' == s[ i ].toString() 
+				|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+				var target = s[ i ].pathAttributes;
+				var hexColor = target.fillColor.toString().slice( 0, 7 );
+				target.fillColor = hexColor + String( opa );
+			}
+		}
+	} else {
+		var operator = String( opa ).substr( 0, 1 );
+		var operand  = String( opa ).substr( 1 ) - 0;
+		
+		if( '+' == operator || '-' == operator ) {
+			operand = parseInt( '0x' + dth( operand ) );
+		}
+		
+		if( isFinite( operand ) ) {
+			switch( operator ) {
+				case '+':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var fillInfo = getFillInfo( target );
+							fillInfo.alpha = parseInt( fillInfo.alpha ) + operand;
+
+							setFillInfo( target, fillInfo, operator );
+						}
+					}
+					break;
+				case '-':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var fillInfo = getFillInfo( target );
+							fillInfo.alpha = parseInt( fillInfo.alpha ) - operand;
+
+							setFillInfo( target, fillInfo, operator );
+						}
+					}
+					break;
+				case '*':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var fillInfo = getFillInfo( target );
+							fillInfo.alpha = parseInt( fillInfo.alpha ) * operand;
+
+							setFillInfo( target, fillInfo, operator );
+						}
+					}
+					break;
+				case '/':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var fillInfo = getFillInfo( target );
+							fillInfo.alpha = parseInt( fillInfo.alpha ) / operand;
+
+							setFillInfo( target, fillInfo, operator );
+						}
+					}
+					break;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	return true;
+
+	function dth( _d )
+	{
+		return ( Math.floor( ( _d * 2.56 ) - 1 ) ).toString( 16 );
+	}
+
+	function getFillInfo( _obj )
+	{
+		var fillInfo = new Object( { hexColor: '', alpha: '' } );
+		fillInfo.hexColor = _obj.fillColor.toString().slice( 0, 7 );
+		fillInfo.alpha = _obj.fillColor.toString().slice( 7, 9 );
+		
+		if( fillInfo.alpha ) {
+			fillInfo.alpha = parseInt( '0x' + fillInfo.alpha ).toString( 10 );
+		} else {
+			fillInfo.alpha = 255;
+		}
+
+		return fillInfo;
+	}
+
+	function setFillInfo( _obj, _fillInfo, _operator )
+	{
+		if( '-' == _operator ) {
+			if( 0 <= _fillInfo.alpha ) {
+				_obj.fillColor = _fillInfo.hexColor + _fillInfo.alpha.toString( 16 );
+			} else {
+				_obj.fillColor = _fillInfo.hexColor + '00';
+			}
+		} else {
+			if( 255 >= _fillInfo.alpha ) {
+				_obj.fillColor = _fillInfo.hexColor + _fillInfo.alpha.toString( 16 );
+			} else {
+				_obj.fillColor = _fillInfo.hexColor + 'ff';
+			}
+		}
+	}
+}
+
+LBsetFillOpacity();
