@@ -1,0 +1,25 @@
+// Fireworks Extension: Commands
+// Fix Text Transformation.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBfixTransformationText()
+{
+	var d = fw.getDocumentDOM();
+	var s = fw.selection;
+	if( !s.length ) return false;
+
+	for (var selLen = s.length - 1; selLen >= 0; selLen--) {
+		if( '[object Text]' == s[ selLen ].toString() ) {
+			var coord = { x: s[ selLen ].left, y: s[ selLen ].top };
+			fw.selection = s[ selLen ];
+			d.removeTransformation();
+			d.moveSelectionTo( coord, false, false );
+		}
+	};
+
+	return true;
+}
+
+LBfixTransformationText();
