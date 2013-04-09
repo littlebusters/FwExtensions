@@ -1,0 +1,133 @@
+// Fireworks Extension: Commands
+// Set Opacity of Fill. (with Operation Mode)
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBsetStrokeOpacity()
+{
+
+	var s = fw.selection;
+	if( !s.length ) return false;
+
+	var opa = prompt( 'enter opacity', 100 );
+	if( !opa ) return false;
+
+	if( isFinite( opa ) && '+' != String( opa ).substr( 0, 1 ) && '-' != String( opa ).substr( 0, 1 ) ) {
+		if( 0 > opa ) opa = 0;
+		if( 100 < opa ) opa = 100;
+		opa = dth( opa );
+
+		for( var i = s.length - 1; i >= 0; i-- ) {
+			if( '[object Path]' == s[ i ].toString() 
+				|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+				var target = s[ i ].pathAttributes;
+				var hexColor = target.brushColor.toString().slice( 0, 7 );
+				target.brushColor = hexColor + String( opa );
+			}
+		}
+	} else {
+		var operator = String( opa ).substr( 0, 1 );
+		var operand  = String( opa ).substr( 1 ) - 0;
+		
+		if( '+' == operator || '-' == operator ) {
+			operand = parseInt( '0x' + dth( operand ) );
+		}
+		
+		if( isFinite( operand ) ) {
+			switch( operator ) {
+				case '+':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var brushInfo = getbrushInfo( target );
+							brushInfo.alpha = parseInt( brushInfo.alpha ) + operand;
+
+							setbrushInfo( target, brushInfo, operator );
+						}
+					}
+					break;
+				case '-':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var brushInfo = getbrushInfo( target );
+							brushInfo.alpha = parseInt( brushInfo.alpha ) - operand;
+
+							setbrushInfo( target, brushInfo, operator );
+						}
+					}
+					break;
+				case '*':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var brushInfo = getbrushInfo( target );
+							brushInfo.alpha = parseInt( brushInfo.alpha ) * operand;
+
+							setbrushInfo( target, brushInfo, operator );
+						}
+					}
+					break;
+				case '/':
+					for( var i = s.length - 1; i >= 0; i-- ) {
+						if( '[object Path]' == s[ i ].toString() 
+							|| '[object RectanglePrimitive]' == s[ i ].toString() ) {
+							var target = s[ i ].pathAttributes;
+							var brushInfo = getbrushInfo( target );
+							brushInfo.alpha = parseInt( brushInfo.alpha ) / operand;
+
+							setbrushInfo( target, brushInfo, operator );
+						}
+					}
+					break;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	return true;
+
+	function dth( _d )
+	{
+		return ( Math.floor( ( _d * 2.56 ) - 1 ) ).toString( 16 );
+	}
+
+	function getbrushInfo( _obj )
+	{
+		var brushInfo = new Object( { hexColor: '', alpha: '' } );
+		brushInfo.hexColor = _obj.brushColor.toString().slice( 0, 7 );
+		brushInfo.alpha = _obj.brushColor.toString().slice( 7, 9 );
+		
+		if( brushInfo.alpha ) {
+			brushInfo.alpha = parseInt( '0x' + brushInfo.alpha ).toString( 10 );
+		} else {
+			brushInfo.alpha = 255;
+		}
+
+		return brushInfo;
+	}
+
+	function setbrushInfo( _obj, _brushInfo, _operator )
+	{
+		if( '-' == _operator ) {
+			if( 0 <= _brushInfo.alpha ) {
+				_obj.brushColor = _brushInfo.hexColor + _brushInfo.alpha.toString( 16 );
+			} else {
+				_obj.brushColor = _brushInfo.hexColor + '00';
+			}
+		} else {
+			if( 255 >= _brushInfo.alpha ) {
+				_obj.brushColor = _brushInfo.hexColor + _brushInfo.alpha.toString( 16 );
+			} else {
+				_obj.brushColor = _brushInfo.hexColor + 'ff';
+			}
+		}
+	}
+}
+
+LBsetStrokeOpacity();
