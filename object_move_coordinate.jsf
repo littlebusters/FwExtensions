@@ -1,0 +1,27 @@
+// Fireworks Extension: Commands
+// Selected Move Object to Coordinate.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+function LBobjectMoveCoord() {
+	var d = fw.getDocumentDOM();
+	var orgBound = d.getSelectionBounds();
+
+	var coordinate = prompt( 'enter X[space]Y', orgBound.left + ' ' + orgBound.top );
+	if( !coordinate ) return false;
+	coordinate = coordinate.split( ' ' );
+
+	if ( isFinite( eval( coordinate[0] ) ) && isFinite( eval( coordinate[1] ) ) ) {
+		coordinate[0] = Math.round( eval( coordinate[0] ) );
+		coordinate[1] = Math.round( eval( coordinate[1] ) );
+		var xy = { x: coordinate[0], y: coordinate[1] };
+		d.moveSelectionTo( xy, false, true );
+	} else {
+		return false;
+	}
+
+	return true;
+}
+
+LBobjectMoveCoord();
