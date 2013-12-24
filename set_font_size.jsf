@@ -1,0 +1,17 @@
+// Fireworks Extension: Commands
+// Set Font Size.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+
+(function() {
+	var s = fw.selection;
+	var fontSize = prompt( 'Enter Font Size: ', s[0].fontsize );
+	if( !fontSize || !s.length ) return false;
+
+	var d = fw.getDocumentDOM();
+	d.applyFontMarkup( 'size', eval( fontSize ) + 'pt' );
+
+	return true;
+}());

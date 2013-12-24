@@ -4,24 +4,21 @@
 // auther: @littlebusters
 // license: MIT
 
-function LBobjectMoveCoord() {
+(function() {
 	var d = fw.getDocumentDOM();
 	var orgBound = d.getSelectionBounds();
 
 	var coordinate = prompt( 'enter X[space]Y', orgBound.left + ' ' + orgBound.top );
-	if( !coordinate ) return false;
-	coordinate = coordinate.split( ' ' );
-
-	if ( isFinite( eval( coordinate[0] ) ) && isFinite( eval( coordinate[1] ) ) ) {
-		coordinate[0] = Math.round( eval( coordinate[0] ) );
-		coordinate[1] = Math.round( eval( coordinate[1] ) );
-		var xy = { x: coordinate[0], y: coordinate[1] };
-		d.moveSelectionTo( xy, false, true );
+	if ( ' ' == ( coordinate + "" ).match( / / ) ) {
+		coordinate = coordinate.split( ' ' );
 	} else {
 		return false;
 	}
 
-	return true;
-}
+	coordinate[0] = ( '' != coordinate[0] ) ? Math.round( eval( coordinate[0] ) ) : orgBound.left;
+	coordinate[1] = ( '' != coordinate[1] ) ? Math.round( eval( coordinate[1] ) ) : orgBound.top;
+	var xy = { x: coordinate[0], y: coordinate[1] };
+	d.moveSelectionTo( xy, false, true );
 
-LBobjectMoveCoord();
+	return true;
+}());

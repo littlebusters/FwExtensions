@@ -4,21 +4,21 @@
 // auther: @littlebusters
 // license: MIT
 
-function LBobjectMove() {
+(function() {
 	var d = fw.getDocumentDOM();
+	var orgBound = d.getSelectionBounds();
 
-	var coordinate = prompt( 'enter X/Y', '' );
-	if( !coordinate ) return false;
-	coordinate = coordinate.split( '/' );
-	
-	if ( isFinite( coordinate[0] ) && isFinite( coordinate[1] ) ) {
-		var xy = { x: coordinate[0], y: coordinate[1] };
-		d.moveSelectionBy( xy, false, true );
+	var coordinate = prompt( 'enter X[space]Y', orgBound.left + ' ' + orgBound.top );
+	if ( ' ' == ( coordinate + "" ).match( / / ) ) {
+		coordinate = coordinate.split( ' ' );
 	} else {
 		return false;
 	}
+	
+	coordinate[0] = ( '' != coordinate[0] ) ? Math.round( eval( coordinate[0] ) ) : 0;
+	coordinate[1] = ( '' != coordinate[1] ) ? Math.round( eval( coordinate[1] ) ) : 0;
+	var xy = { x: coordinate[0], y: coordinate[1] };
+	d.moveSelectionBy( xy, false, true );
 
 	return true;
-}
-
-LBobjectMove();
+}());
