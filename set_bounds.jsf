@@ -1,6 +1,6 @@
 // Fireworks Extension: Commands
 // Set Bounds of Selection.
-// version: 1.0
+// version: 1.0.1
 // auther: @littlebusters
 // license: MIT
 
@@ -13,7 +13,8 @@
 
 	var dimensions = prompt( 'Width[space]Height', s[0].width + ' ' + s[0].height );
 	if( dimensions ) {
-		var dimension  = dimensions.split( ' ' );
+		var fullspace = new RegExp( '\\u3000' );
+		var dimension  = ( dimensions.replace( fullspace, ' ' ) ).split( ' ' );
 	} else {
 		return false;
 	}
