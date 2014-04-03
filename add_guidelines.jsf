@@ -1,0 +1,40 @@
+// Fireworks Extension: Commands
+// Add Guidelines.
+// version: 1.0.0
+// auther: @littlebusters
+// license: MIT
+
+
+(function() {
+
+	var d = fw.getDocumentDOM();
+
+	var options = prompt( 'Start[space]Distance[space]Times[space]Alignment\nAlignment v:| / h:- / b:+', '0 40 10 v' );
+	if( options ) {
+		var fullspace = new RegExp( '\\u3000' );
+		var option  = ( options.replace( fullspace, ' ' ) ).split( ' ' );
+	} else {
+		return false;
+	}
+
+	var alignment = 'vertical';
+	if ( 'h' === option[3] ) {
+		alignment = 'horizontal';
+	} else if ( 'b' === option[3] ) {
+		alignment = 'both';
+	} else if ( 'vertical' != option[3] ) {
+		return false;
+	}
+
+	console.log( option );
+	for ( var i = 0; i < option[2]; i++ ) {
+		if ( 'both' != alignment ) {
+			d.addGuide( ( i * option[1] ) + +option[0], alignment );
+		} else {
+			d.addGuide( ( i * option[1] ) + +option[0], 'vertical' );
+			d.addGuide( ( i * option[1] ) + +option[0], 'horizontal' );
+		}
+	};
+	return true;
+
+}());
