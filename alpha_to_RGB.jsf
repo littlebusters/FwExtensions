@@ -1,0 +1,33 @@
+// Fireworks Extension: Commands
+// convert to RGB from alpha color.
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+(function() {
+	var s = fw.selection[0],
+		fillColor,
+		brushColor,
+		alpha,
+		fillRGB = [],
+		brushRGB = [];
+
+	if( !s ) return false;
+	fillColor = s.pathAttributes.fillColor;
+	brushColor = s.pathAttributes.brushColor;
+	alpha = s.opacity / 100;
+
+	for (var i = 0; i < 3; i++) {
+		fillRGB[i]  = parseInt( '0x' + fillColor.slice( i * 2 + 1, i * 2 + 3 ) ).toString( 10 );
+		brushRGB[i] = parseInt( '0x' + brushColor.slice( i * 2 + 1, i * 2 + 3 ) ).toString( 10 );
+		fillRGB[i]  = ( fillRGB[i] - 0 + Math.round( ( 255 - fillRGB[i] ) * alpha ) ).toString( 16 );
+		brushRGB[i] = ( brushRGB[i] - 0 + Math.round( ( 255 - brushRGB[i] ) * alpha ) ).toString( 16 );
+	};
+
+	if( s.pathAttributes.fill )  s.pathAttributes.fillColor  = '#' + fillRGB[0] + fillRGB[1] + fillRGB[2];
+	if( s.pathAttributes.brush ) s.pathAttributes.brushColor = '#' + brushRGB[0] + brushRGB[1] + brushRGB[2];
+	s.opacity = 100;
+
+	return true;
+
+}());

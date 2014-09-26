@@ -42,3 +42,7 @@ Fireworks Extensions
 ## set_font_size.jsf
 
 フォントサイズを設定する。
+
+## alpha_to_RGB.jsf
+
+アルファを含むRGB値を通常のRGB値に変換する。塗りまたは線自体にアルファ値を設定している場合は、考慮しない。
