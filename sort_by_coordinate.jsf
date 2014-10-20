@@ -1,0 +1,69 @@
+// Fireworks Extension: Commands
+// Sort by Coordinate (Origin Criteria).
+// version: 1.0
+// auther: @littlebusters
+// license: MIT
+
+(function() {
+
+	var s = fw.selection;
+	if ( !s.length ) {
+		alert('You have not selected layers...');
+		return false;
+	}
+
+	var slices = new Array(),
+		sliceIndex = 0;
+
+	for ( var i = 0; s.length > i; i++ ) {
+		if ( String( s[i] ) == '[object SliceHotspot]' ) {
+			slices[sliceIndex++] = s[i];
+		}
+	};
+	if ( !slices.length ) {
+		alert('You have not selected slice layers...');
+		return false;
+	}
+
+	var coordinates = new Array();
+	var ordering = new Array();
+
+	for (var i = slices.length - 1; i >= 0; i--) {
+		coordinates.push( [slices[i].top, slices[i].left] );
+		ordering[i] = i;
+	};
+
+	for ( var i = 0; i < coordinates.length - 1; i++ ) {
+
+		for ( var j = coordinates.length - 1; j > i; j-- ) {
+
+			if( coordinates[j][0] < coordinates[j - 1][0] ) {
+				var orderingTmp = ordering[j];
+				ordering[j] = ordering[j - 1];
+				ordering[j - 1] = orderingTmp;
+				var coordinatesTmp = coordinates[j];
+				coordinates[j] = coordinates[j - 1];
+				coordinates[j - 1] = coordinatesTmp;
+
+			} else if( coordinates[j][0] <= coordinates[j - 1][0] && coordinates[j][1] < coordinates[j - 1][1] ) {
+				var orderingTmp = ordering[j];
+				ordering[j] = ordering[j - 1];
+				ordering[j - 1] = orderingTmp;
+				var coordinatesTmp = coordinates[j];
+				coordinates[j] = coordinates[j - 1];
+				coordinates[j - 1] = coordinatesTmp;
+				
+			}
+		};
+	};
+
+	var layerNums = ordering.length;
+	for (var i = 0; layerNums > i; i++) {
+		fw.selection = slices[layerNums - ordering[i] - 1];
+		fw.getDocumentDOM().moveSelectionToLayer( -1, false, "none", layerNums - i - 1 );
+	};
+
+	fw.selection = slices;
+	return true;
+
+}());
