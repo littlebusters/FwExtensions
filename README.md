@@ -46,3 +46,7 @@ Fireworks Extensions
 ## alpha_to_RGB.jsf
 
 アルファを含むRGB値を通常のRGB値に変換する。塗りまたは線自体にアルファ値を設定している場合は、考慮しない。
+
+## sort_by_coodinate.jsf
+
+原点を起点に、スライスを Y座標 > X座標 でソートする。
